@@ -12,7 +12,6 @@ protected:
 	VanillaOption() = default;
 	VanillaOption(const Payoff&, double, double);
 	VanillaOption(const VanillaOption&);
-	~VanillaOption();
 public:
 	virtual ~VanillaOption();
 	//getters
