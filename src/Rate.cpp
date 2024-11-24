@@ -1,6 +1,5 @@
 #include "Rate.hpp"
 
-
 Rate::Rate(double rate_0, double rate_1, int N) {
 	double dt = 1 / static_cast<double>(N);
 	for (int i = 0; i < N; i++) {
@@ -32,3 +31,4 @@ double Rate::at(double t) const {
 	}
 	return it->second;
 }
+
