@@ -7,6 +7,6 @@ public:
 	PutPayoff(double);
 	~PutPayoff() override = default;
 	double operator()(double) const override;
-	Payoff* clone() const override;
+	//Payoff* clone() const override;
 
 };
