@@ -6,8 +6,8 @@ add_library(BS_pricer
     PutPayoff.cpp
     Rate.cpp
     CrankNicolsonSolver.cpp
-)
+    Greeks.cpp)
 
-add_executable(main main.cpp)
+add_executable(main main.cpp "Greeks.cpp")
 
 target_link_libraries(main BS_pricer)
