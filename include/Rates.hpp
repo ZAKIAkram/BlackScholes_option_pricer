@@ -5,13 +5,11 @@
 
 class Rates {
 private:
-	// time: rate, time is between 0 and 1
-	std::unordered_map<double, double> _rates;
+	double _rate_0, _rate_1;
 public:
 	Rates() = default;
-	Rates(double, double, int); // rate at 0, rate at 1, N
-	Rates(double, double, double); // rate at 0, rate at 1, dt
-	Rates(const std::unordered_map<double, double>&);
+	Rates(double);
+	Rates(double, double); // rate at 0, rate at 1
 	~Rates() = default;
 	double at(double) const;
 };
