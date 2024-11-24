@@ -9,5 +9,8 @@
 #include "VanillaOption.hpp"
 
 class EuropeanOption : public VanillaOption {
-
+public:
+	std::string getType() const override {
+		return "european";
+	}
 };
