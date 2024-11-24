@@ -4,7 +4,7 @@ add_library(BS_pricer
     CallPayoff.cpp
     Payoff.cpp
     PutPayoff.cpp
-    Rate.cpp
+    "Rates.cpp"
     CrankNicolsonSolver.cpp
 )
 

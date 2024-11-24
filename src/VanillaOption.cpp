@@ -1,17 +1,17 @@
 #include "VanillaOption.hpp"
 
 
-VanillaOption::VanillaOption(const Payoff& payoff, double maturity, double sigma) : _maturity(maturity), _sigma(sigma){
+VanillaOption::VanillaOption(const Payoff& payoff, double maturity, double sigma, int N) : _maturity(maturity), _sigma(sigma), _rates(0., 0., N){
 	_payoff = payoff.clone();
+}
+VanillaOption::VanillaOption(const Payoff& payoff, double maturity, double sigma, double rate_0, double rate_1, int N) : _maturity(maturity), _sigma(sigma), _rates(rate_0, rate_1, N) {
+	_payoff = payoff.clone();
+
 }
 
 VanillaOption::VanillaOption(const VanillaOption& other) {
 	_maturity = other.getMaturity();
 	_payoff = other._payoff->clone();
-}
-
-VanillaOption::~VanillaOption() {
-	delete _payoff;
 }
 
 double VanillaOption::getMaturity() const {
