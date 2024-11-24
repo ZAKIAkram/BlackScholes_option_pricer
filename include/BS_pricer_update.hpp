@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Rate.hpp"
+#include "Rates.hpp"
 
 //contract and exercise types
 enum class ContractType { Call, Put };
@@ -17,7 +17,7 @@ struct OptionParameters {
     std::vector<double> timeMesh; // Time mesh parameters
     std::vector<double> spotMesh; // Spot mesh parameters
     double spotPrice;             // Current spot price S0
-    Rate riskFreeRate;            // Risk-free rate class
+    Rates riskFreeRate;            // Risk-free rate class
     double volatility;            // Volatility 
 };
 

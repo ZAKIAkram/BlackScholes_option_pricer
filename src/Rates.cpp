@@ -1,4 +1,4 @@
-#include "Rate.hpp"
+#include "Rates.hpp"
 
 
 Rates::Rates(double rate_0, double rate_1, int N) {
