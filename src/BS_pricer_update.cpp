@@ -10,7 +10,7 @@ double blackScholesPrice(const OptionParameters& params) {
     }
 
     // Use the risk-free rate from the Rate class
-    double r = params.riskFreeRate.at(params.maturity);
+    double r = params.riskFreeRate.at(1);
     double T = params.maturity - params.computationDate; // Time to maturity
     double S = params.spotPrice;                        // Spot price
     double K = params.strike;                           // Strike price

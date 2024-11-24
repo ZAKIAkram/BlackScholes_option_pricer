@@ -28,14 +28,14 @@
 int main() {
     try {
         // Create a risk-free rate object
-        Rates riskFreeRate(0.01, 0.05, 10); 
+        Rates riskFreeRate(0.03); 
 
         // Define option parameters
         OptionParameters option{
             ContractType::Call,                         // Call option
             ExerciseType::European,                     // European exercise
-            0.5,                                        // Maturity T = 1 year
-            100.0,                                      // Strike price
+            1,                                        // Maturity T = 1 year
+            120.0,                                      // Strike price
             0.0,                                        // Computation date T0 = today
             {0.0, 0.5, 1.0},                            // Time mesh
             {80.0, 100.0, 120.0},                       // Spot mesh
