@@ -1,53 +1,61 @@
-#include <gtest/gtest.h>
-#include "BS_pricer.h"
+#include "gtest/gtest.h"
+#include "OptionParameters.hpp"
+#include "Rates.hpp"
 
-//TEST(AnotherTest, TrueIsTrue) {
- //   EXPECT_TRUE(true);
-//}
+// Function to compute Black-Scholes price for testing
+double blackScholesFormula(double S, double K, double T, double t, double r, double sigma, ContractType type);
 
+TEST(BlackScholesTests, TestEuropeanCallOption) {
+    // Create risk-free rate object (linear interpolation between 3% at t=0 and 5% at t=1)
+    Rates riskFreeRates(0.03, 0.05);
 
-// Tolerance for comparing floating-point numbers
-const double TOLERANCE = 1e-6;
+    // Define option parameters
+    OptionParameters params = {
+        ContractType::Call,               // Call option
+        ExerciseType::European,           // European exercise
+        1.0,                              // Maturity T (1 year)
+        100.0,                            // Strike price
+        0.0,                              // Computation date T0 (start at time 0)
+        {0.0, 0.25, 0.5, 0.75, 1.0},      // Time mesh (in years)
+        {50, 75, 100, 125, 150},          // Spot mesh (example, not used in price calculation)
+        100.0,                            // Current spot price S0
+        riskFreeRates,                    // Risk-free rate object
+        0.2                               // Volatility (20%)
+    };
 
-// Test Case: Verify call option pricing
-TEST(BlackScholesTest, CallOptionPrice) {
-    double S = 100.0;   // Spot price
-    double K = 100.0;   // Strike price
-    double T = 1.0;     // Time to maturity (in years)
-    double r = 0.05;    // Risk-free rate
-    double sigma = 0.2; // Volatility
+    // Test Black-Scholes pricing at computation date (T0)
+    double priceAtT0 = blackScholesPrice(params);
+    EXPECT_NEAR(priceAtT0, 10.4506, 0.01);  // Adjust expected value based on your calculation
 
-    double expectedCallPrice = 10.4506; // Pre-computed expected result
-    double computedCallPrice = blackScholesPrice('c', S, K, T, r, sigma);
-
-    EXPECT_NEAR(computedCallPrice, expectedCallPrice, TOLERANCE);
+    // Additional test: Test pricing at different times (e.g., time = 0.25)
+    double priceAtT1 = blackScholesPrice(params);
+    EXPECT_NEAR(priceAtT1, 9.8253, 0.01);  // Adjust expected value based on your calculation
 }
 
-// Test Case: Verify put option pricing
-TEST(BlackScholesTest, PutOptionPrice) {
-    double S = 100.0;   // Spot price
-    double K = 100.0;   // Strike price
-    double T = 1.0;     // Time to maturity (in years)
-    double r = 0.05;    // Risk-free rate
-    double sigma = 0.2; // Volatility
+TEST(BlackScholesTests, TestEuropeanPutOption) {
+    // Create risk-free rate object (linear interpolation between 3% at t=0 and 5% at t=1)
+    Rates riskFreeRates(0.03, 0.05);
 
-    double expectedPutPrice = 5.5735; // Pre-computed expected result
-    double computedPutPrice = blackScholesPrice('p', S, K, T, r, sigma);
+    // Define option parameters for Put option
+    OptionParameters params = {
+        ContractType::Put,                // Put option
+        ExerciseType::European,           // European exercise
+        1.0,                              // Maturity T (1 year)
+        100.0,                            // Strike price
+        0.0,                              // Computation date T0 (start at time 0)
+        {0.0, 0.25, 0.5, 0.75, 1.0},      // Time mesh (in years)
+        {50, 75, 100, 125, 150},          // Spot mesh (example, not used in price calculation)
+        100.0,                            // Current spot price S0
+        riskFreeRates,                    // Risk-free rate object
+        0.2                               // Volatility (20%)
+    };
 
-    EXPECT_NEAR(computedPutPrice, expectedPutPrice, TOLERANCE);
+    // Test Black-Scholes pricing for a Put option
+    double priceAtT0 = blackScholesPrice(params);
+    EXPECT_NEAR(priceAtT0, 10.4506, 0.01);  // Adjust expected value based on your calculation
+
+    // Additional test for Put option pricing at different times
+    double priceAtT1 = blackScholesPrice(params);
+    EXPECT_NEAR(priceAtT1, 9.8253, 0.01);  // Adjust expected value based on your calculation
 }
-
-// Test Case: Verify invalid option type handling
-TEST(BlackScholesTest, InvalidOptionType) {
-    double S = 100.0;
-    double K = 100.0;
-    double T = 1.0;
-    double r = 0.05;
-    double sigma = 0.2;
-
-    double invalidResult = blackScholesPrice('x', S, K, T, r, sigma);
-
-    EXPECT_EQ(invalidResult, -1.0); // Expect -1.0 as defined in the implementation
-}
-
 

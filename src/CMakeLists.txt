@@ -1,13 +1,15 @@
 add_library(BS_pricer
-    BS_pricer.cpp
+    
     VanillaOption.cpp
     CallPayoff.cpp
     Payoff.cpp
     PutPayoff.cpp
-    "Rates.cpp"
+    Rates.cpp
     CrankNicolsonSolver.cpp
     Greeks.cpp
-    BS_pricer_update.cpp)
+    BS_pricer.cpp
+    Greeks_bs.cpp
+)
 
 add_executable(main main.cpp)
 

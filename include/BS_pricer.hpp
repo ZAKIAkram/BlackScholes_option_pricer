@@ -17,8 +17,9 @@ struct OptionParameters {
     std::vector<double> timeMesh; // Time mesh parameters
     std::vector<double> spotMesh; // Spot mesh parameters
     double spotPrice;             // Current spot price S0
-    Rates riskFreeRate;            // Risk-free rate class
+    Rates riskFreeRate;           // Risk-free rate class
     double volatility;            // Volatility 
+    double dividend;              //dividend
 };
 
 // Function to calculate Black-Scholes price

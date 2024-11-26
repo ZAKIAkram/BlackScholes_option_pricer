@@ -1,55 +1,38 @@
-//#include "BS_pricer.h"
-//
-//#include <iostream>
-//
-////int main() {
-////
-////    double S = 100.0;   // Stock price
-////    double K = 100.0;   // Strike
-////    double T = 1.0;     // Maturity
-////    double r = 0.05;    // Risk free rate
-////    double sigma = 0.2; // Volatility
-////
-////    // Call and Put price 
-////    double callPrice = blackScholesPrice('c', S, K, T, r, sigma);
-////    double putPrice = blackScholesPrice('p', S, K, T, r, sigma);
-////
-////    // Results
-////    std::cout << "Call option's price: " << callPrice << std::endl;
-////    std::cout << "Put option's price: " << putPrice << std::endl;
-////
-////    return 0;
-////}
-////
-//
+#include "BS_pricer.hpp"
+#include "Rates.hpp"
+#include "Greeks.hpp"
+
 #include <iostream>
-#include "BS_pricer_update.hpp"
 
 int main() {
+    // Create the risk-free rate object (linear interpolation between 3% at t=0 and 5% at t=1)
+    Rates riskFreeRates(0.03, 0.05);
+
+    // Define option parameters
+    OptionParameters params = {
+        ContractType::Call,              // Call option
+        ExerciseType::European,          // European exercise
+        2.0,                             // Maturity T (1 year)
+        100.0,                           // Strike price
+        0.0,                             // Computation date T0 (start at time 0)
+        {0.0, 0.25, 0.5, 0.75, 1.0},     // Time mesh (in years)
+        {50, 75, 100, 125, 150},         // Spot mesh (not used in pricing here)
+        100.0,                           // Current spot price S0
+        riskFreeRates,                   // Risk-free rate object
+        0.2,                             // Volatility (20%)
+        0                                //dividend
+    };
+
     try {
-        // Create a risk-free rate object
-        Rates riskFreeRate(0.03); 
+        //std::cout << "Option type: " << ExerciseType, ContractType<< std::endl;
 
-        // Define option parameters
-        OptionParameters option{
-            ContractType::Call,                         // Call option
-            ExerciseType::European,                     // European exercise
-            1,                                        // Maturity T = 1 year
-            120.0,                                      // Strike price
-            0.0,                                        // Computation date T0 = today
-            {0.0, 0.5, 1.0},                            // Time mesh
-            {80.0, 100.0, 120.0},                       // Spot mesh
-            100.0,                                      // Spot price S0
-            riskFreeRate,                               // Risk-free rate object
-            0.2                                         // Volatility
-        };
-
-        // Compute the Black-Scholes price
-        double price = blackScholesPrice(option);
-
+        
+        // Calculate Black-Scholes price at computation date (T0)
+        double priceAtT0 = blackScholesPrice(params);
+        //calculate the greeks
+        calculateGreeks(params);
         // Output the result
-        std::cout << "Black-Scholes Price: " << price << std::endl;
-
+        //std::cout << "Option price at computation date (T0): " << priceAtT0 << std::endl;
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -57,7 +40,5 @@ int main() {
 
     return 0;
 }
-
-
 
 
