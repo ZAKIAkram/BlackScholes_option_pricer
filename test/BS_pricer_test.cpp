@@ -1,18 +1,19 @@
 #include "gtest/gtest.h"
 #include "OptionParameters.hpp"
 #include "Rates.hpp"
+#include "BS_pricer.hpp" 
 
 // Function to compute Black-Scholes price for testing
-double blackScholesFormula(double S, double K, double T, double t, double r, double sigma, ContractType type);
+double blackScholesPrice(const OptionParameters& params);
 
 TEST(BlackScholesTests, TestEuropeanCallOption) {
     // Create risk-free rate object (linear interpolation between 3% at t=0 and 5% at t=1)
     Rates riskFreeRates(0.03, 0.05);
 
-    // Define option parameters
+    // Define option parameters for a Call option
     OptionParameters params = {
-        ContractType::Call,               // Call option
-        ExerciseType::European,           // European exercise
+        OptionParameters::CALL,               // Call option
+        OptionParameters::EUROPEAN,           // European exercise
         1.0,                              // Maturity T (1 year)
         100.0,                            // Strike price
         0.0,                              // Computation date T0 (start at time 0)
@@ -25,21 +26,24 @@ TEST(BlackScholesTests, TestEuropeanCallOption) {
 
     // Test Black-Scholes pricing at computation date (T0)
     double priceAtT0 = blackScholesPrice(params);
-    EXPECT_NEAR(priceAtT0, 10.4506, 0.01);  // Adjust expected value based on your calculation
+    EXPECT_NEAR(priceAtT0, 10.4506, 0.01);  
 
-    // Additional test: Test pricing at different times (e.g., time = 0.25)
-    double priceAtT1 = blackScholesPrice(params);
-    EXPECT_NEAR(priceAtT1, 9.8253, 0.01);  // Adjust expected value based on your calculation
+    // Test Black-Scholes pricing for a Call option at a later time (e.g., t = 0.25)
+    OptionParameters paramsAtT1 = params;  // Make a copy of params
+    paramsAtT1.setComputationDate(0.25);   // Set computation time to 0.25 years
+
+    double priceAtT1 = blackScholesPrice(paramsAtT1);
+    EXPECT_NEAR(priceAtT1, 9.8253, 0.01); 
 }
 
 TEST(BlackScholesTests, TestEuropeanPutOption) {
     // Create risk-free rate object (linear interpolation between 3% at t=0 and 5% at t=1)
     Rates riskFreeRates(0.03, 0.05);
 
-    // Define option parameters for Put option
+    // Define option parameters for a Put option
     OptionParameters params = {
-        ContractType::Put,                // Put option
-        ExerciseType::European,           // European exercise
+        OptionParameters::PUT,                // Put option
+        OptionParameters::EUROPEAN,           // European exercise
         1.0,                              // Maturity T (1 year)
         100.0,                            // Strike price
         0.0,                              // Computation date T0 (start at time 0)
@@ -50,12 +54,14 @@ TEST(BlackScholesTests, TestEuropeanPutOption) {
         0.2                               // Volatility (20%)
     };
 
-    // Test Black-Scholes pricing for a Put option
+    // Test Black-Scholes pricing at computation date (T0)
     double priceAtT0 = blackScholesPrice(params);
-    EXPECT_NEAR(priceAtT0, 10.4506, 0.01);  // Adjust expected value based on your calculation
+    EXPECT_NEAR(priceAtT0, 10.4506, 0.01);  
 
-    // Additional test for Put option pricing at different times
-    double priceAtT1 = blackScholesPrice(params);
-    EXPECT_NEAR(priceAtT1, 9.8253, 0.01);  // Adjust expected value based on your calculation
+    // Test Black-Scholes pricing for a Put option at a later time (e.g., t = 0.25)
+    OptionParameters paramsAtT1 = params;  // Make a copy of params
+    paramsAtT1.setComputationDate(0.25);   // Set computation time to 0.25 years
+
+    double priceAtT1 = blackScholesPrice(paramsAtT1);
+    EXPECT_NEAR(priceAtT1, 9.8253, 0.01);  
 }
-

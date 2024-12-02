@@ -16,7 +16,5 @@ public:
 
 	std::vector<double> getTimeGrid() const;
 	std::vector<double> getSpotGrid() const;
-	int getN() const;
-	int getM() const;
 
 };

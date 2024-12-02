@@ -4,6 +4,7 @@
 #include "Greeks.hpp"
 #include "BS_pricer.hpp"
 #include "Rates.hpp"
+#include "OptionParameters.hpp"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -21,29 +22,28 @@ double normPDF(double x) {
 
 // Function to calculate Black-Scholes Greeks for all times in the time mesh
 std::vector<Greeks> calculateGreeks(const OptionParameters& params) {
-    if (params.exerciseType != ExerciseType::European) {
+    if (params.getExerciseType() != OptionParameters::EUROPEAN) {
         throw std::invalid_argument("Black-Scholes formula is only valid for European options.");
     }
 
-    double S = params.spotPrice;
-    double K = params.strike;
-    double T = params.maturity;
-    double sigma = params.volatility;
-    double y = params.dividend;
-
+    double S = params.getSpotPrice();
+    double K = params.getStrike();
+    double T = params.getMaturity();
+    double sigma = params.getVolatility();
+    double y = params.getDividend();
 
     std::vector<Greeks> allGreeks;
 
     // Iterate over the time mesh
-    for (double t : params.timeMesh) {
+    for (double t : params.getTimeMesh()) {
         if (T <= t) {
             throw std::invalid_argument("Maturity T must be greater than the computation time t.");
         }
-        double T0 = params.computationDate;
-        double T = params.maturity;
-         double t_normalized = (t - T0) / (T - T0);   // Normalize time to [0, 1]
+        double T0 = params.getComputationDate();
+        double t_normalized = (t - T0) / (T - T0);   // Normalize time to [0, 1]
+
         // Compute risk-free rate at t
-        double r = params.riskFreeRate.at(t_normalized);
+        double r = params.getRiskFreeRate().at(t_normalized);
 
         double tau = T - t; // Time to maturity
         double d1 = (std::log(S / K) + (r - y + 0.5 * sigma * sigma) * tau) / (sigma * std::sqrt(tau));
@@ -52,18 +52,18 @@ std::vector<Greeks> calculateGreeks(const OptionParameters& params) {
         Greeks greeks;
 
         // Delta
-        if (params.contractType == ContractType::Call) {
+        if (params.getContractType() == OptionParameters::CALL) {
             greeks.delta = std::exp(-y * tau) * normCDF(d1);
         }
         else {
-            greeks.delta = std::exp(-y * tau) *(normCDF(d1) - 1);
+            greeks.delta = std::exp(-y * tau) * (normCDF(d1) - 1);
         }
 
         // Gamma
         greeks.gamma = (normPDF(d1) * std::exp(-y * tau)) / (S * sigma * std::sqrt(tau));
 
         // Theta
-        if (params.contractType == ContractType::Call) {
+        if (params.getContractType() == OptionParameters::CALL) {
             greeks.theta = -(S * normPDF(d1) * sigma * std::exp(-y * tau)) / (2 * std::sqrt(tau)) +
                 y * S * std::exp(-y * tau) * normCDF(d1) -
                 r * K * std::exp(-r * tau) * normCDF(d2);
@@ -75,7 +75,7 @@ std::vector<Greeks> calculateGreeks(const OptionParameters& params) {
         }
 
         // Rho
-        if (params.contractType == ContractType::Call) {
+        if (params.getContractType() == OptionParameters::CALL) {
             greeks.rho = K * tau * std::exp(-r * tau) * normCDF(d2);
         }
         else {

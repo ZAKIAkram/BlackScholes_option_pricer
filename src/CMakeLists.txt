@@ -9,8 +9,9 @@ add_library(BS_pricer
     Greeks.cpp
     BS_pricer.cpp
     Greeks_bs.cpp
-)
+    CN_1.cpp 
+    BoundayConditions.cpp "OptionParameters.cpp")
 
-add_executable(main main.cpp)
+add_executable(main main.cpp "CN_1.cpp" "BoundayConditions.cpp" "OptionParameters.cpp")
 
 target_link_libraries(main BS_pricer)
