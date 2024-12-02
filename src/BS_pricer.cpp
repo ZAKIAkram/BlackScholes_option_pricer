@@ -1,4 +1,11 @@
-#include "BS_Pricer.hpp"
+#pragma once
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include "OptionParameters.hpp"
+#include "Rates.hpp"
+#include "BS_pricer.hpp"
 
 // Helper function: CDF of standard normal distribution
 double normalCDF(double x) {

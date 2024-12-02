@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "OptionParameters.hpp"
 #include "Rates.hpp"
 #include "Greeks.hpp" 
@@ -13,7 +13,7 @@ TEST(BlackScholesGreeksTests, TestEuropeanCallOptionGreeks) {
 
     // Define option parameters for a Call option
     OptionParameters params = {
-        OptionParameters::CALL;              // Call option
+        OptionParameters::CALL,              // Call option
         OptionParameters::EUROPEAN,           // European exercise
         1.0,                              // Maturity T (1 year)
         100.0,                            // Strike price
@@ -22,7 +22,9 @@ TEST(BlackScholesGreeksTests, TestEuropeanCallOptionGreeks) {
         {50, 75, 100, 125, 150},          // Spot mesh (example, not used in price calculation)
         100.0,                            // Current spot price S0
         riskFreeRates,                    // Risk-free rate object
-        0.2                               // Volatility (20%)
+        0.2,                               // Volatility (20%)
+        0.0                              //dividend  
+
     };
     // Calculate Greeks for the Call option
     std::vector<Greeks> greeks = calculateGreeks(params);
@@ -72,7 +74,9 @@ TEST(BlackScholesGreeksTests, TestEuropeanPutOptionGreeks) {
         {50, 75, 100, 125, 150},          // Spot mesh (example, not used in price calculation)
         100.0,                            // Current spot price S0
         riskFreeRates,                    // Risk-free rate object
-        0.2                               // Volatility (20%)
+        0.2,                               // Volatility (20%)
+        0.0                              //dividend  
+
     };
 
     // Calculate Greeks for the Put option

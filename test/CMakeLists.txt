@@ -5,7 +5,10 @@ add_executable(
   non_regression_tests
   CallPayoff_test.cpp
   PutPayoff_test.cpp
-  Rate_test.cpp "OptionParameters_test.cpp" "greeks_bs_test.cpp")
+  Rate_test.cpp 
+  OptionParameters_test.cpp
+  greeks_bs_test.cpp
+  BS_pricer_test.cpp)
 
 target_link_libraries(
   non_regression_tests

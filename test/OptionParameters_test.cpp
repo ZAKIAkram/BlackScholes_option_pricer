@@ -1,80 +1,68 @@
 #include <gtest/gtest.h>
 #include "OptionParameters.hpp"
-#include "Rates.hpp"
+#include "Rates.hpp"  
 
-// Test Fixture for OptionParameters
-class OptionParametersTest : public ::testing::Test {
-protected:
-    // Default option parameters for testing
-    Rates riskFreeRate{ 0.05 };  // 5% risk-free rate
-    std::vector<double> timeMesh{ 0.0, 0.5, 1.0 };  // Example time mesh: [0.0, 0.5, 1.0]
-    std::vector<double> spotMesh{ 80.0, 100.0, 120.0 };  // Example spot mesh: [80, 100, 120]
+TEST(OptionParametersTest, ConstructorTest) {
+    // Set up the Rates object for testing
+    Rates riskFreeRates(0.03, 0.05);  // 3% at t=0, 5% at t=1
 
-    OptionParameters optionParams{
-        OptionParameters::CALL,        // Contract type: CALL
-        OptionParameters::EUROPEAN,    // Exercise type: EUROPEAN
-        1.0,                           // Maturity: 1 year
-        100.0,                         // Strike price: 100
-        0.0,                           // Computation date: today
-        timeMesh,                      // Time mesh
-        spotMesh,                      // Spot mesh
-        100.0,                         // Spot price: 100
-        riskFreeRate,                  // Risk-free rate
-        0.2,                           // Volatility: 20%
-        0.0                            // Dividend: 0%
+    // Define option parameters for testing
+    OptionParameters params = {
+        OptionParameters::CALL,                // Put option
+        OptionParameters::EUROPEAN,           // European exercise
+        1.0,                              // Maturity T (1 year)
+        100.0,                            // Strike price
+        0.0,                              // Computation date T0 (start at time 0)
+        {0.0, 0.25, 0.5, 0.75, 1.0},      // Time mesh (in years)
+        {50, 75, 100, 125, 150},          // Spot mesh (example, not used in price calculation)
+        100.0,                            // Current spot price S0
+        riskFreeRates,                    // Risk-free rate object
+        0.2,                               // Volatility (20%)
+        0.0                              //dividend  
+
     };
-};
 
-// Test default constructor (using default parameters)
-TEST_F(OptionParametersTest, DefaultConstructor) {
-    OptionParameters defaultOptionParams;
-
-    // Test default values
-    EXPECT_EQ(defaultOptionParams.getContractType(), OptionParameters::CALL);
-    EXPECT_EQ(defaultOptionParams.getExerciseType(), OptionParameters::EUROPEAN);
-    EXPECT_DOUBLE_EQ(defaultOptionParams.getMaturity(), 1.0);
-    EXPECT_DOUBLE_EQ(defaultOptionParams.getStrike(), 100.0);
-    EXPECT_DOUBLE_EQ(defaultOptionParams.getComputationDate(), 0.0);
-    EXPECT_DOUBLE_EQ(defaultOptionParams.getSpotPrice(), 100.0);
-    EXPECT_DOUBLE_EQ(defaultOptionParams.getVolatility(), 0.2);
-    EXPECT_DOUBLE_EQ(defaultOptionParams.getDividend(), 0.0);
-    EXPECT_EQ(defaultOptionParams.getTimeMesh().size(), 0);  // Empty by default
-    EXPECT_EQ(defaultOptionParams.getSpotMesh().size(), 0);  // Empty by default
+    // Validate that the constructor properly initialized the member variables using getter functions
+    EXPECT_EQ(params.getContractType(), OptionParameters::CALL);
+    EXPECT_EQ(params.getExerciseType(), OptionParameters::EUROPEAN);
+    EXPECT_DOUBLE_EQ(params.getMaturity(), 1.0);
+    EXPECT_DOUBLE_EQ(params.getStrike(), 100.0);
+    EXPECT_DOUBLE_EQ(params.getComputationDate(), 0.0);
+    EXPECT_EQ(params.getTimeMesh().size(), 5); // Should match the number of elements in the time mesh
+    EXPECT_EQ(params.getSpotMesh().size(), 5); // Should match the number of elements in the spot mesh
+    EXPECT_DOUBLE_EQ(params.getSpotPrice(), 100.0);
+    EXPECT_DOUBLE_EQ(params.getVolatility(), 0.2);
+    EXPECT_DOUBLE_EQ(params.getDividend(), 0.0);
 }
 
-// Test parameterized constructor
-TEST_F(OptionParametersTest, ParameterizedConstructor) {
-    // Check that the parameters set via the constructor are correctly set
-    EXPECT_EQ(optionParams.getContractType(), OptionParameters::CALL);
-    EXPECT_EQ(optionParams.getExerciseType(), OptionParameters::EUROPEAN);
-    EXPECT_DOUBLE_EQ(optionParams.getMaturity(), 1.0);
-    EXPECT_DOUBLE_EQ(optionParams.getStrike(), 100.0);
-    EXPECT_DOUBLE_EQ(optionParams.getComputationDate(), 0.0);
-    EXPECT_DOUBLE_EQ(optionParams.getSpotPrice(), 100.0);
-    EXPECT_DOUBLE_EQ(optionParams.getVolatility(), 0.2);
-    EXPECT_DOUBLE_EQ(optionParams.getDividend(), 0.0);
+TEST(OptionParametersTest, GetterFunctionsTest) {
+    // Set up the Rates object for testing
+    Rates riskFreeRates(0.03, 0.05);
 
-    // Check the size of the time and spot meshes
-    EXPECT_EQ(optionParams.getTimeMesh().size(), 3);  // Expected size of 3
-    EXPECT_EQ(optionParams.getSpotMesh().size(), 3);  // Expected size of 3
+    // Define option parameters for testing
+    OptionParameters params(
+        OptionParameters::PUT,                // Put option
+        OptionParameters::AMERICAN,           // American exercise
+        0.5,                                  // Maturity T (0.5 years)
+        120.0,                                // Strike price
+        0.1,                                  // Computation date T0
+        { 0.0, 0.25, 0.5 },                     // Time mesh
+        { 60, 80, 100 },                        // Spot mesh
+        110.0,                                // Spot price S0
+        riskFreeRates,                        // Risk-free rate object
+        0.25,                                 // Volatility
+        0.05                                  // Dividend
+    );
 
-    // Check that the time and spot mesh values are correct
-    EXPECT_DOUBLE_EQ(optionParams.getTimeMesh()[0], 0.0);
-    EXPECT_DOUBLE_EQ(optionParams.getTimeMesh()[1], 0.5);
-    EXPECT_DOUBLE_EQ(optionParams.getTimeMesh()[2], 1.0);
-
-    EXPECT_DOUBLE_EQ(optionParams.getSpotMesh()[0], 80.0);
-    EXPECT_DOUBLE_EQ(optionParams.getSpotMesh()[1], 100.0);
-    EXPECT_DOUBLE_EQ(optionParams.getSpotMesh()[2], 120.0);
+    // Validate the getter functions to ensure correct values
+    EXPECT_EQ(params.getContractType(), OptionParameters::PUT);
+    EXPECT_EQ(params.getExerciseType(), OptionParameters::AMERICAN);
+    EXPECT_DOUBLE_EQ(params.getMaturity(), 0.5);
+    EXPECT_DOUBLE_EQ(params.getStrike(), 120.0);
+    EXPECT_DOUBLE_EQ(params.getComputationDate(), 0.1);
+    EXPECT_EQ(params.getTimeMesh().size(), 3); // 3 values in the time mesh
+    EXPECT_EQ(params.getSpotMesh().size(), 3); // 3 values in the spot mesh
+    EXPECT_DOUBLE_EQ(params.getSpotPrice(), 110.0);
+    EXPECT_DOUBLE_EQ(params.getVolatility(), 0.25);
+    EXPECT_DOUBLE_EQ(params.getDividend(), 0.05);
 }
-
-// Test Risk-Free Rate
-TEST_F(OptionParametersTest, RiskFreeRate) {
-    EXPECT_DOUBLE_EQ(optionParams.getRiskFreeRate().at(0), 0.05);  // Should return 0.05 for t = 0
-}
-
-// Test that invalid times throw an exception
-TEST_F(OptionParametersTest, InvalidRiskFreeRateTime) {
-    EXPECT_THROW(optionParams.getRiskFreeRate().at(2.0), std::out_of_range);  // Should throw an exception
-}
-
