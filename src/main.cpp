@@ -54,8 +54,8 @@ int main() {
     Rates riskFreeRates(0.03, 0.05);
 
         OptionParameters optionParams = {
-        OptionParameters::CALL,          // ContractType (CALL or PUT)
-        OptionParameters::EUROPEAN,      // ExerciseType (EUROPEAN or AMERICAN)
+        OptionParameters::PUT,          // ContractType (CALL or PUT)
+        OptionParameters::AMERICAN,      // ExerciseType (EUROPEAN or AMERICAN)
         2.0,                             // Maturity T (1 year)
         100.0,                           // Strike price
         0.0,                             // Computation date T0 (start at time 0)
