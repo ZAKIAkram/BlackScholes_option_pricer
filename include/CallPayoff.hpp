@@ -8,5 +8,6 @@ public:
 	~CallPayoff() override = default;
 	//Payoff* clone() const override;
 	double operator()(double) const override;
+	std::string getType() const override;
 
 };

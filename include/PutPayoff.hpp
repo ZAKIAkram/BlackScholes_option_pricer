@@ -7,6 +7,7 @@ public:
 	PutPayoff(double);
 	~PutPayoff() override = default;
 	double operator()(double) const override;
+	std::string getType() const override;
 	//Payoff* clone() const override;
 
 };

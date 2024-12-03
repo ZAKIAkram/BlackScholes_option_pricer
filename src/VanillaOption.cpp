@@ -1,7 +1,7 @@
 #include "VanillaOption.hpp"
 
 
-VanillaOption::VanillaOption(const std::shared_ptr<Payoff>& payoff, double maturity, double sigma, int N) : _maturity(maturity), _sigma(sigma), _rates(0., 0.){
+VanillaOption::VanillaOption(const std::shared_ptr<Payoff>& payoff, double maturity, double sigma, int N) : _maturity(maturity), _sigma(sigma), _rates(0., 0.), _optionPrices(N), _spot(N){
 	_payoff = payoff;
 }
 VanillaOption::VanillaOption(const std::shared_ptr<Payoff>& payoff, double maturity, double sigma, double rate_0, double rate_1, int N) : _maturity(maturity), _sigma(sigma), _rates(rate_0, rate_1) {
@@ -26,5 +26,8 @@ void VanillaOption::setMaturity(double maturity) {
 
 double VanillaOption::computePayoff(double spot) const{
 	return (*_payoff)(spot);
+}
+bool VanillaOption::isCall() const {
+	return (_payoff->getType() == "call");
 }
 

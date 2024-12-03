@@ -9,5 +9,6 @@ protected:
 public:
 	virtual double operator()(double) const = 0;
 	virtual ~Payoff() = default;
+	virtual std::string getType() const = 0;
 	//virtual Payoff* clone() const = 0;
 };

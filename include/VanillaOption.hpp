@@ -7,9 +7,6 @@
 
 class VanillaOption {
 protected:
-	// without reference, the compiler will refuse to instanciate an object from an abstract class
-	// hence we should create the object first and then keep the reference here
-	//Payoff* _payoff; 
 	std::shared_ptr<Payoff> _payoff; 
 	double _maturity, _sigma;
 	Rates _rates;
@@ -27,6 +24,7 @@ public:
 	virtual std::string getType() const = 0; // TODO
 	void setMaturity(double);
 	double computePayoff(double) const;
+	bool isCall() const;
 
 
 
