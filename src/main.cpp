@@ -1,17 +1,17 @@
-#include "BS_pricer.hpp"
-#include "Rates.hpp"
-#include "Greeks.hpp"
-
-#include <iostream>
-
+//#include "BS_pricer.hpp"
+//#include "Rates.hpp"
+//#include "Greeks.hpp"
+//
+//#include <iostream>
+//
 //int main() {
 //    // Create the risk-free rate object (linear interpolation between 3% at t=0 and 5% at t=1)
 //    Rates riskFreeRates(0.03, 0.05);
 //
 //    // Define option parameters
 //    OptionParameters params = {
-//        ContractType::Call,              // Call option
-//        ExerciseType::European,          // European exercise
+//        OptionParameters::PUT,          // ContractType (CALL or PUT)
+//        OptionParameters::EUROPEAN,
 //        2.0,                             // Maturity T (1 year)
 //        100.0,                           // Strike price
 //        0.0,                             // Computation date T0 (start at time 0)
@@ -40,13 +40,14 @@
 //
 //    return 0;
 //}
-// 
+ 
 #pragma once
 #include <vector>
 #include <algorithm>
 #include "OptionParameters.hpp"
 #include "BoundaryConditions.hpp"
 #include "CN_1.hpp"
+#include "Greeks.hpp"
 
 
 
@@ -86,13 +87,37 @@ int main() {
         std::cerr << "Error: Target spot price not found in the spot grid!" << std::endl;
         return -1;
     }
+    // Retrieve time grid for iteration
+    const std::vector<double>& timeGrid = solver.getTimeGrid();
 
-    // Print option prices for the target spot price at each time step
-    std::cout << "Option Prices for Spot Price " << targetSpotPrice << " at Different Time Steps:" << std::endl;
-    const std::vector<double>& timeMesh = optionParams.getTimeMesh();
-    for (size_t t = 0; t < timeMesh.size(); ++t) {
-        std::cout << "Time: " << timeMesh[t]
-            << " -> Option Price: " << optionPriceGrid[t][spotIndex] << std::endl;
+    // Define parameters for Greek computation
+    double deltaS = 1e-2;  // Small change in spot price for finite difference
+    double deltaT = timeGrid[1] - timeGrid[0];  // Time step size from the grid
+
+    // Print headers
+    std::cout << "Time Step\tOption Price\tDelta\tGamma\tTheta" << std::endl;
+
+    // Compute option prices and Greeks at different time steps
+    for (size_t t = 0; t < timeGrid.size() - 1; ++t) {
+        try {
+            // Extract option price at the target spot price for the current time step
+            double optionPrice = optionPriceGrid[t][spotIndex];
+
+            // Compute Greeks for the current time step
+            Greeks greeks = computeGreeks(solver, targetSpotPrice, deltaS, deltaT);
+
+            // Display the results
+            std::cout << timeGrid[t] << "\t\t"
+                << optionPrice << "\t\t"
+                << greeks.delta << "\t"
+                << greeks.gamma << "\t"
+                << greeks.theta << std::endl;
+
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Error computing Greeks at time step " << t
+                << ": " << e.what() << std::endl;
+        }
     }
 
     return 0;

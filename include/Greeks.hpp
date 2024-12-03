@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BS_pricer.hpp"
+#include "CN_1.hpp"
 
 
 struct Greeks {
@@ -13,3 +14,4 @@ struct Greeks {
 
 // Function to calculate Black-Scholes price
 std::vector<Greeks> calculateGreeks(const OptionParameters& params);
+Greeks computeGreeks(CrankNicolsonSolver& solver, double spotPrice, double deltaS, double deltaT);
