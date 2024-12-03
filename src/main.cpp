@@ -49,25 +49,25 @@
 #include "CN_1.hpp"
 #include "Greeks.hpp"
 
+#include <iostream>
 
 
 int main() {
     Rates riskFreeRates(0.03, 0.05);
 
-        OptionParameters optionParams = {
+    OptionParameters optionParams = {
         OptionParameters::PUT,          // ContractType (CALL or PUT)
-        OptionParameters::AMERICAN,      // ExerciseType (EUROPEAN or AMERICAN)
+        OptionParameters::AMERICAN,     // ExerciseType (EUROPEAN or AMERICAN)
         2.0,                             // Maturity T (1 year)
-        100.0,                           // Strike price
+        80.0,                           // Strike price
         0.0,                             // Computation date T0 (start at time 0)
         {0.0, 0.25, 0.5, 0.75, 1.0},     // Time mesh (in years)
         {50, 75, 100, 125, 150},         // Spot mesh (not used in pricing here)
         100.0,                           // Current spot price S0
         riskFreeRates,                   // Risk-free rate object
         0.2,                             // Volatility (20%)
-        0                                //dividend
+        0                                // Dividend
     };
- 
 
     // Create CrankNicolsonSolver object with option parameters
     CrankNicolsonSolver solver(optionParams);
@@ -76,43 +76,46 @@ int main() {
     std::vector<std::vector<double>> optionPriceGrid = solver.solve();
 
     // Define the spot price for which we want prices across time steps
-    double targetSpotPrice = 100.0;
+    double targetSpotPrice = 80.0;
 
     // Find the index of the target spot price in the spot grid
     const std::vector<double>& spotGrid = solver.getSpotGrid();
     size_t spotIndex = std::distance(spotGrid.begin(),
         std::find(spotGrid.begin(), spotGrid.end(), targetSpotPrice));
 
-    if (spotIndex >= spotGrid.size()) {
-        std::cerr << "Error: Target spot price not found in the spot grid!" << std::endl;
-        return -1;
-    }
+
     // Retrieve time grid for iteration
     const std::vector<double>& timeGrid = solver.getTimeGrid();
 
     // Define parameters for Greek computation
     double deltaS = 1e-2;  // Small change in spot price for finite difference
     double deltaT = timeGrid[1] - timeGrid[0];  // Time step size from the grid
+    double deltaSigma = 1e-2;  // Small change in volatility
+    double deltaR = 1e-2;      // Small change in risk-free rate
 
     // Print headers
-    std::cout << "Time Step\tOption Price\tDelta\tGamma\tTheta" << std::endl;
+    std::cout << "Time (Months)\tOption Price\tDelta\tGamma\tTheta\tVega\tRho" << std::endl;
 
     // Compute option prices and Greeks at different time steps
-    //mazal  nqad time steps 0, 0.25, 0.5, 0.75, 1
-    for (size_t t = 0; t < timeGrid.size() - 1; ++t) {
+    for (size_t t = 0; t < timeGrid.size(); ++t) {
         try {
+            // Convert time step to months
+            int months = static_cast<int>(timeGrid[t] * 12);
+
             // Extract option price at the target spot price for the current time step
             double optionPrice = optionPriceGrid[t][spotIndex];
 
             // Compute Greeks for the current time step
-            Greeks greeks = computeGreeks(solver, targetSpotPrice, deltaS, deltaT);
+            Greeks greeks = computeGreeks(solver, targetSpotPrice, deltaS, deltaT, deltaSigma, deltaR);
 
             // Display the results
-            std::cout << timeGrid[t] << "\t\t"
+            std::cout << months << "\t\t"
                 << optionPrice << "\t\t"
                 << greeks.delta << "\t"
                 << greeks.gamma << "\t"
-                << greeks.theta << std::endl;
+                << greeks.theta << "\t"
+                << greeks.vega << "\t"
+                << greeks.rho << std::endl;
 
         }
         catch (const std::exception& e) {
@@ -123,3 +126,4 @@ int main() {
 
     return 0;
 }
+

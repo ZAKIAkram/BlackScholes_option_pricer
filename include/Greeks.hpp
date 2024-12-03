@@ -14,4 +14,4 @@ struct Greeks {
 
 // Function to calculate Black-Scholes price
 std::vector<Greeks> calculateGreeks(const OptionParameters& params);
-Greeks computeGreeks(CrankNicolsonSolver& solver, double spotPrice, double deltaS, double deltaT);
+Greeks computeGreeks(CrankNicolsonSolver& solver, double spotPrice, double deltaS, double deltaT, double deltaSigma, double deltaR);

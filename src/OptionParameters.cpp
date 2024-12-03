@@ -71,3 +71,4 @@ double OptionParameters::getVolatility() const {
 double OptionParameters::getDividend() const {
     return dividend;
 }
+

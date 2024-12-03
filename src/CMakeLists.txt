@@ -1,5 +1,4 @@
 add_library(BS_pricer
-    
     VanillaOption.cpp
     CallPayoff.cpp
     Payoff.cpp
@@ -13,6 +12,6 @@ add_library(BS_pricer
     BoundayConditions.cpp 
     OptionParameters.cpp)
 
-add_executable(main main.cpp "CN_1.cpp" "BoundayConditions.cpp" "OptionParameters.cpp")
+add_executable(main main.cpp)
 
 target_link_libraries(main BS_pricer)

@@ -7,6 +7,9 @@
 // Crank-Nicholson solver for option pricing
 class CrankNicolsonSolver {
 public:
+    const OptionParameters& getOptionParameters() const {
+        return _optionParams;
+    }
     // Constructor to initialize with the option parameters
     CrankNicolsonSolver(const OptionParameters& optionParams);
 
@@ -33,4 +36,5 @@ private:
 
     // Solve the tridiagonal system at each time step
     void solveTridiagonal(size_t tIndex);
+
 };

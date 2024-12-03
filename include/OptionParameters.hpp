@@ -38,6 +38,14 @@ public:
     double getVolatility() const;
     double getDividend() const;
 
+    void setVolatility(double newVolatility) {
+        volatility = newVolatility;
+    }
+
+    void setRiskFreeRate(const Rates& newRiskFreeRate) {
+        riskFreeRate = newRiskFreeRate;
+    }
+
 private:
     // Option contract and exercise type
     ContractType contractType;
