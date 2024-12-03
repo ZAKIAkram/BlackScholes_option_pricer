@@ -17,14 +17,14 @@ void CrankNicolsonSolver::initializeGrid() {
     double spotPrice = _optionParams.getSpotPrice();
 
     // Define the number of time steps and spot grid points
-    size_t numSpotSteps = 100;  // Example, you can adjust this
-    size_t numTimeSteps = 100;  // Example, you can adjust this
+    size_t numSpotSteps = 100;  
+    size_t numTimeSteps = 100; 
 
     _spotGrid.resize(numSpotSteps);
     _timeGrid.resize(numTimeSteps);
     _grid.resize(numTimeSteps, std::vector<double>(numSpotSteps));
 
-    double maxSpotPrice = strike * 3;  // Define a reasonable upper bound for the spot grid
+    double maxSpotPrice = strike * 3;  // max = 3*strike price 
     double dS = maxSpotPrice / (numSpotSteps - 1);  // Step size in spot price
     double dt = maturity / (numTimeSteps - 1);     // Step size in time
 
