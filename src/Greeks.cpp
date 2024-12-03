@@ -42,3 +42,4 @@ Greeks computeGreeks(CrankNicolsonSolver& solver, double spotPrice, double delta
 
     return { delta, gamma, theta };
 }
+//mazal vega w rho 

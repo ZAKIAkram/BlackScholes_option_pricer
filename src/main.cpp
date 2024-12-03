@@ -98,6 +98,7 @@ int main() {
     std::cout << "Time Step\tOption Price\tDelta\tGamma\tTheta" << std::endl;
 
     // Compute option prices and Greeks at different time steps
+    //mazal  nqad time steps 0, 0.25, 0.5, 0.75, 1
     for (size_t t = 0; t < timeGrid.size() - 1; ++t) {
         try {
             // Extract option price at the target spot price for the current time step
