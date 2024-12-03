@@ -68,18 +68,31 @@ int main() {
     };
  
 
-
     // Create CrankNicolsonSolver object with option parameters
     CrankNicolsonSolver solver(optionParams);
 
     // Solve the PDE
     std::vector<std::vector<double>> optionPriceGrid = solver.solve();
 
-    // Print the option prices at the first time step (option price at different spot prices)
-    std::cout << "Option Prices at the First Time Step:" << std::endl;
-    for (size_t i = 0; i < solver.getSpotGrid().size(); ++i) {
-        std::cout << "Spot Price: " << solver.getSpotGrid()[i]
-            << " -> Option Price: " << optionPriceGrid[0][i] << std::endl;
+    // Define the spot price for which we want prices across time steps
+    double targetSpotPrice = 100.0;
+
+    // Find the index of the target spot price in the spot grid
+    const std::vector<double>& spotGrid = solver.getSpotGrid();
+    size_t spotIndex = std::distance(spotGrid.begin(),
+        std::find(spotGrid.begin(), spotGrid.end(), targetSpotPrice));
+
+    if (spotIndex >= spotGrid.size()) {
+        std::cerr << "Error: Target spot price not found in the spot grid!" << std::endl;
+        return -1;
+    }
+
+    // Print option prices for the target spot price at each time step
+    std::cout << "Option Prices for Spot Price " << targetSpotPrice << " at Different Time Steps:" << std::endl;
+    const std::vector<double>& timeMesh = optionParams.getTimeMesh();
+    for (size_t t = 0; t < timeMesh.size(); ++t) {
+        std::cout << "Time: " << timeMesh[t]
+            << " -> Option Price: " << optionPriceGrid[t][spotIndex] << std::endl;
     }
 
     return 0;
