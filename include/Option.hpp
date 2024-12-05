@@ -11,7 +11,7 @@ protected:
 	double _maturity, _sigma;
 	Rates _rates;
 	std::vector<double> _optionPrices;
-	std::vector<double> _spot;
+	std::vector<double> _spot; // TODO: to remove
 
 	Option() = default;
 	Option(const std::shared_ptr<Payoff>&, double, double, int = 100);
