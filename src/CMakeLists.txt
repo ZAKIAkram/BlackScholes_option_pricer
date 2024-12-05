@@ -1,6 +1,6 @@
 add_library(BS_pricer
     BS_pricer.cpp
-    VanillaOption.cpp
+    "Option.cpp"
     CallPayoff.cpp
     Payoff.cpp
     PutPayoff.cpp

@@ -1,9 +1,9 @@
 #pragma once
-#include "VanillaOption.hpp"
+#include "Option.hpp"
 
-class AmericanOption : public VanillaOption{
+class AmericanOption : public Option{
 public:
-	std::string getType() const override {
+	std::string getExerciseType() const override {
 		return "american";
 	}
 };

@@ -1,6 +1,6 @@
 #include "CrankNicolsonSolver.hpp"
 
-CrankNicolsonSolver::CrankNicolsonSolver(int N, int M) : _N(N), _M(M), _time_grid(N), _spot_grid(M), _grid(N, std::vector<double>(M)) {
+CrankNicolsonSolver::CrankNicolsonSolver(size_t N, size_t M) : _N(N), _M(M), _time_grid(N), _spot_grid(M), _grid(M, std::vector<double>(N)) {
 	if (N <= 0) {
 		throw std::invalid_argument("N should be greater than 0");
 	}
@@ -34,12 +34,42 @@ int CrankNicolsonSolver::getN() const {
 	return _N;
 }
 
-void CrankNicolsonSolver::setupDirichletBoundaryConditions(const std::shared_ptr<VanillaOption>& option){
-	if (option->isCall()) {
+std::vector<std::vector<double>>& CrankNicolsonSolver::setupDirichletBoundaryConditions(const Option& option) const{
+	std::vector<std::vector<double>> grid(_M, std::vector<double>(_N));
+	double T = option.getMaturity();
+	double K = option.getStrike();
+	Rates r = option.getRates();
+	double dt = 1 / static_cast<double>(_N);
+	double ds = 1 / static_cast<double>(_M - 1);
+	if (option.getType() == "call") {
+		double S_max = 3 * K;
 		for (int i = 0; i < _N; i++) {
-			_grid[i][0] = 0;
+			double r_t = r.at(i * dt);
+			grid[0][i] = 0;
+			grid[_M - 1][i] = S_max - K * exp(-r_t * T *(1 - i * dt));
 		}
-
 	}
-	
+	else {
+		for (int i = 0; i < _N; i++) {
+			double r_t = r.at(i * dt);
+			grid[0][i] = K * exp(-r_t * T * (1 - i * dt));
+			grid[_M - 1][i] = 0;
+		}
+	}
+	return grid;
 }
+
+std::vector<std::vector<double>>& CrankNicolsonSolver::setupNeumanntBoundaryConditions(const Option& option, std::vector<std::vector<double>>& grid) const {
+	for (int i = 0; i < _N; i++) {
+		grid[0][i] = 2 * grid[1][i] - grid[2][i];
+	}
+	return grid;
+}
+
+std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option) const{
+	std::vector<std::vector<double>> grid = setupDirichletBoundaryConditions(option);
+
+
+}
+
+

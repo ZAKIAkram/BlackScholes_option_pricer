@@ -6,11 +6,11 @@
  * \date   November 2024
  *********************************************************************/
 #pragma once
-#include "VanillaOption.hpp"
+#include "Option.hpp"
 
-class EuropeanOption : public VanillaOption {
+class EuropeanOption : public Option {
 public:
-	std::string getType() const override {
+	std::string getExerciseType() const override {
 		return "european";
 	}
 };
