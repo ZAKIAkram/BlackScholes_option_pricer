@@ -18,12 +18,13 @@ protected:
 	Option(const std::shared_ptr<Payoff>&, double, double, double, double, int = 100);
 	Option(const Option&);
 public:
-	virtual ~Option();
+	//virtual ~Option();
 	//getters
 	double getMaturity() const;
 	virtual std::string getExerciseType() const = 0; // TODO
 	Rates getRates() const;
 	double getStrike() const;
+	double getSigma() const;
 	void setMaturity(double);
 	double computePayoff(double) const;
 	std::string getType() const;

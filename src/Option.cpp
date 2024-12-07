@@ -28,9 +28,15 @@ double Option::getStrike() const {
 	return _payoff->getStrike();
 }
 
+double Option::getSigma() const {
+	return _sigma;
+}
+
 void Option::setMaturity(double maturity) {
 	_maturity = maturity;
 }
+
+
 
 double Option::computePayoff(double spot) const{
 	return (*_payoff)(spot);
