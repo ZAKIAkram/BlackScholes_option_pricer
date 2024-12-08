@@ -27,9 +27,10 @@ public:
 	int getM() const;
 
 	std::vector<std::vector<double>> solve(const std::shared_ptr<Option>& option);
+	std::vector<std::vector<double>> solve_2(const std::shared_ptr<Option>& option);
 
 	// Solve the tridiagonal system for a given time step using the Crank-Nicholson scheme
 
-	std::vector<std::vector<double>>& solveTridiagonalSystem(std::vector<std::vector<double>>&, int, const std::shared_ptr<Option>&);
+	std::vector<std::vector<double>>& solveTridiagonalSystem(int, const std::shared_ptr<Option>&);
 
 };
