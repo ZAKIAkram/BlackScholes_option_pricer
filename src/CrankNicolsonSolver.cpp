@@ -14,7 +14,6 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 	std::vector<double> b(M - 1, 0.0);
 	std::vector<double> c(M - 1, 0.0);
 	std::vector<double> d(M - 1, 0.0);
-	//std::vector<std::vector<double>> grid(N + 1, std::vector<double>(M + 1, 0.));
 	std::vector<std::vector<double>> grid(M + 1, std::vector<double>(N + 1, 0.));
 
 	setupBoundaryConditions(option, grid);
@@ -31,7 +30,6 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 			a[i - 1] = -alpha;
 			b[i - 1] = 1 - beta;
 			c[i - 1] = -gamma;
-			//d[i - 1] = alpha * grid[i - 1][t + 1] + (1 + beta) * grid[t + 1][i] + gamma * grid[t + 1][i + 1];
 			d[i - 1] = alpha * grid[i - 1][t + 1] + (1 + beta) * grid[i][t + 1] + gamma * grid[i + 1][t + 1];
 		}
 

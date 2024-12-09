@@ -25,9 +25,6 @@ double blackScholesPrice(double S, double K, double T, double r, double sigma, c
     else if (optionType == "Put") {
         return K * std::exp(-r * T) * N_minus_d2 - S * N_minus_d1;
     }
-    else {
-        throw std::invalid_argument("Invalid option type. Use 'Call' or 'Put'.");
-    }
 }
 
 int main() {
