@@ -10,6 +10,6 @@
 
 class EuropeanOption : public Option {
 public:
-	EuropeanOption(const std::shared_ptr<Payoff>&, double, double, double, double, int);
+	EuropeanOption(const std::shared_ptr<Payoff>&, double, double, double, double);
 	std::string getExerciseType() const override;
 };
