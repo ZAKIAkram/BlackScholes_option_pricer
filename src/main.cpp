@@ -59,10 +59,10 @@ int main() {
 
     int S_index = static_cast<int>(S * M / (2 * K));
 
-    double crankCallPrice = europeanCallGrid[0][S_index]; 
-    double crankPutPrice = europeanPutGrid[0][S_index];   
-    double crankAmericanCallPrice = americanCallGrid[0][S_index];
-    double crankAmericanPutPrice = americanPutGrid[0][S_index];
+    double crankCallPrice = europeanCallGrid[S_index][0];
+    double crankPutPrice = europeanPutGrid[S_index][0];
+    double crankAmericanCallPrice = americanCallGrid[S_index][0];
+    double crankAmericanPutPrice = americanPutGrid[S_index][0];
 
     double bsCallPrice = blackScholesPrice(S, K, T, r, sigma, "Call");
     double bsPutPrice = blackScholesPrice(S, K, T, r, sigma, "Put");
