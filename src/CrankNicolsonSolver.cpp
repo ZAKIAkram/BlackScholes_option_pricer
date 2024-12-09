@@ -42,7 +42,7 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 			d[i] -= m * d[i - 1];
 		}
 
-		grid[t][M - 1] = d[M - 2] / b[M - 2];
+		grid[M - 1][t] = d[M - 2] / b[M - 2];
 		for (int i = M - 2; i > 0; --i) {
 			grid[i][t] = (d[i - 1] - c[i - 1] * grid[i + 1][t]) / b[i - 1];
 		}
