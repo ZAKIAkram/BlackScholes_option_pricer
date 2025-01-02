@@ -31,6 +31,13 @@ double Option::getSigma() const {
 void Option::setMaturity(double maturity) {
 	_maturity = maturity;
 }
+void Option::setSigma(double sigma) {
+	_sigma = sigma;
+}
+
+void Option::setRates(Rates rates) {
+	_rates = rates;
+}
 
 double Option::computePayoff(double spot) const{
 	return (*_payoff)(spot);

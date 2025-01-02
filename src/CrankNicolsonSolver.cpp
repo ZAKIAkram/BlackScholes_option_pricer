@@ -20,7 +20,7 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 
 	for (int t = N - 1; t >= 0; --t) {
 		double r = rates.at(t * dt / T);
-		//Set up the tridiagonal system
+
 		for (int i = 1; i < M; ++i) {
 			double stockPrice = i * ds;
 			double alpha = 0.25 * dt * (sigma * sigma * i * i - r * i);

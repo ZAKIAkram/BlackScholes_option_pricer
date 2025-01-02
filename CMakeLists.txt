@@ -10,7 +10,6 @@ if(MSVC)
 endif()
 
 
-# Include directories for all subprojects
 include_directories(include)
 
 # Fetch Google Test
@@ -29,7 +28,6 @@ add_definitions(-DGTEST_OS_ESP8266=1)
 
 
 
-# Add subdirectories
 add_subdirectory(src)
 add_subdirectory(test)
 
