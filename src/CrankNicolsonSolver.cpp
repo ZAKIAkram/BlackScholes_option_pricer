@@ -42,7 +42,8 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 
 		grid[M - 1][t] = d[M - 2] / b[M - 2];
 		for (int i = M - 2; i > 0; --i) {
-			grid[i][t] = (d[i - 1] - c[i - 1] * grid[i + 1][t]) / b[i - 1];
+			double value = (d[i - 1] - c[i - 1] * grid[i + 1][t]) / b[i - 1];
+			grid[i][t] = (value > 1e-16) ? value : 0.;
 		}
 
 		if (option.getExerciseType() == "American") {
