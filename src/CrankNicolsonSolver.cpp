@@ -11,17 +11,18 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 	std::string optionType = option.getType();
 	std::string exerciseType = option.getExerciseType();
 
-	std::vector<double> a(M - 1, 0.0);
-	std::vector<double> b(M - 1, 0.0);
-	std::vector<double> c(M - 1, 0.0);
-	std::vector<double> d(M - 1, 0.0);
+	std::vector<double> a(M, 0.0);
+	std::vector<double> b(M, 0.0);
+	std::vector<double> c(M, 0.0);
+	std::vector<double> d(M, 0.0);
 	std::vector<std::vector<double>> grid(M + 1, std::vector<double>(N + 1, 0.));
 
 	setupBoundaryConditions(option, grid);
 
 	for (int t = N - 1; t >= 0; --t) {
 		double r = rates.at(t * dt / T);
-
+		/*a[0] = 0.;
+		c[M - 1] = 0.;*/
 		for (int i = 1; i < M; ++i) {
 			double stockPrice = i * ds;
 			double alpha = 0.25 * dt * (sigma * sigma * i * i - r * i);
@@ -33,17 +34,19 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 			c[i - 1] = -gamma;
 			d[i - 1] = alpha * grid[i - 1][t + 1] + (1. + beta) * grid[i][t + 1] + gamma * grid[i + 1][t + 1];
 		}
+		
 
 		// Thomas algorithm
-		for (int i = 1; i < M - 1; ++i) {
+		for (int i = 1; i < M; ++i) {
 			double m = a[i] / b[i - 1];
 			b[i] -= m * c[i - 1];
 			d[i] -= m * d[i - 1];
 		}
 
-		grid[M - 1][t] = d[M - 2] / b[M - 2];
-		for (int i = M - 2; i > 0; --i) {
-			double value = (d[i - 1] - c[i - 1] * grid[i + 1][t]) / b[i - 1];
+		grid[M - 1][t] = d[M - 1] / b[M - 1];
+		for (int i = M - 1; i > 0; --i) {
+			//double value = (d[i - 1] - c[i - 1] * grid[i + 1][t]) / b[i - 1];
+			double value = (d[i] - c[i] * grid[i + 1][t]) / b[i];
 			grid[i][t] = (std::abs(value) > 1e-16) ? value : 0.;
 			if (exerciseType == "American") {
 				double spot = i * ds;
