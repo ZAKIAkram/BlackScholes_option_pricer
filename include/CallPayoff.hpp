@@ -5,10 +5,10 @@
 class CallPayoff : public Payoff {
 public:
 	CallPayoff() = default;
-	CallPayoff(double);
+	CallPayoff(double strike);
 	~CallPayoff() override = default;
 	//Payoff* clone() const override;
-	double operator()(double) const override;
+	double operator()(double spot) const override;
 	std::string getType() const override;
 
 };

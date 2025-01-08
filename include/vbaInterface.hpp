@@ -14,8 +14,11 @@
 
 extern "C" {
     __declspec(dllexport) void computeCrankNicolsonGrid(
-        int, int, double, double, double,
+        int N, int M, double T, double K, double sigma,
         double, double, double,
         const char*, const char*,
         SAFEARRAY**, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**);
 }
+
+void copyArray(const std::vector<double>& data, SAFEARRAY** outArray);
+void flattenAndCopyArray(const std::vector<std::vector<double>>& data, SAFEARRAY** outArray);

@@ -8,8 +8,8 @@ private:
 	double _rate_0, _rate_1;
 public:
 	Rates() = default;
-	Rates(double, double); // rate at 0, rate at 1, epsilon
-	Rates(const Rates&);
+	Rates(double rate_0, double rate_1); 
+	Rates(const Rates& other);
 	~Rates() = default;
-	double at(double) const;
+	double at(double t) const;
 };
