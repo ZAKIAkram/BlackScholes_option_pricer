@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Payoff.hpp"
 
 class CallPayoff : public Payoff {

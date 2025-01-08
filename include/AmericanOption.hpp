@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Option.hpp"
 
 class AmericanOption : public Option{

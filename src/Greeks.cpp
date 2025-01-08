@@ -15,45 +15,33 @@ Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& gri
 
 
 	for (int i = 1; i < _M; i++) {
+		double S = i * ds;
 		_delta[i] = (grid[i + 1][0] - grid[i - 1][0]) / (2 * ds);
 		_gamma[i] = (grid[i + 1][0] - 2 * grid[i][0] + grid[i - 1][0]) / (ds * ds);
+		_rho[i] = -(grid[i][0] - S * (grid[i + 1][0] - grid[i - 1][0]) / (2 * ds));
+		_vega[i] = sigma * S * S * _gamma[i];
 	}
 
 	_delta[0] = (grid[1][0] - grid[0][0]) / ds;
 	_delta[_M] = (grid[_M][0] - grid[M - 1][0]) / ds;
-	_gamma[0] = 0.0;
-	_gamma[_M] = 0.0;
+	_gamma[0] = 0.;
+	_gamma[1] = 0.;
+	_gamma[_M] = 0.;
 
 
 	for (int t = 0; t < _N; t++) {
 		for (int i = 0; i < _M + 1; i++) {
-			_theta[i][t] = (grid[i][t] - grid[i][t + 1]) / dt;
+			_theta[i][t] = (grid[i][t + 1] - grid[i][t]) / dt;
 		}
 	}
 
-	double epsilon = 0.01;
-	for (int i = 0; i < _M + 1; i++) {
-		auto option_up_sigma = option.clone();
-		option_up_sigma->setSigma(option.getSigma() + epsilon);
-		std::vector<std::vector<double>> grid_up_sigma = CrankNicolsonSolver::solve(*option_up_sigma, _N, _M);
+	
+	_vega[0] = _vega[1];
+	_vega[M] = _vega[M - 1];
 
-		auto option_down_sigma = option.clone();
-		option_down_sigma->setSigma(option.getSigma() - epsilon);
-		std::vector<std::vector<double>> grid_down_sigma = CrankNicolsonSolver::solve(*option_down_sigma, _N, _M);
-
-		_vega[i] = (grid_up_sigma[i][0] - grid_down_sigma[i][0]) / (2 * epsilon);
-
-		auto option_up_r = option.clone();
-		option_up_r->setRates(Rates(option.getRates(), epsilon));
-		std::vector<std::vector<double>> grid_up_r = CrankNicolsonSolver::solve(*option_up_r, _N, _M);
-
-		auto option_down_r = option.clone();
-		option_up_r->setRates(Rates(option.getRates(), -epsilon));
-		std::vector<std::vector<double>> grid_down_r = CrankNicolsonSolver::solve(*option_down_r, _N, _M);
-
-		_rho[i] = (grid_up_r[i][0] - grid_down_r[i][0]) / (2 * epsilon);
-	}
-
+	
+	_rho[0] = _rho[1];
+	_rho[M] = _rho[_M - 1];
 }
 
 std::vector<double> Greeks::getDelta() const {

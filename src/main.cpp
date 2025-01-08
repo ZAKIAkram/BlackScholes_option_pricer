@@ -9,6 +9,7 @@
 #include "PutPayoff.hpp"
 #include "CrankNicolsonSolver.hpp"
 #include "Greeks.hpp"
+#include "BlackScholesExplicit.hpp"
 
 double blackScholesPrice(double S, double K, double T, double r, double sigma, const std::string& optionType) {
     double d1 = (std::log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * std::sqrt(T));
@@ -19,10 +20,10 @@ double blackScholesPrice(double S, double K, double T, double r, double sigma, c
     double N_minus_d1 = 1.0 - N_d1;
     double N_minus_d2 = 1.0 - N_d2;
 
-    if (optionType == "Call") {
+    if (optionType == "call") {
         return S * N_d1 - K * std::exp(-r * T) * N_d2;
     }
-    else if (optionType == "Put") {
+    else if (optionType == "put") {
         return K * std::exp(-r * T) * N_minus_d2 - S * N_minus_d1;
     }
 }
@@ -55,7 +56,7 @@ int main() {
     Greeks americanCallGreeks(americanCallOption, americanCallGrid, N, M);
     Greeks americanPutGreeks(americanPutOption, americanPutGrid, N, M);
 
-    size_t mid = M / 2;
+    int mid = M / 2;
     double S_max = 2.0 * K; 
     double ds = S_max / (M);
 
@@ -66,8 +67,9 @@ int main() {
     double crankAmericanCallPrice = americanCallGrid[S_index][0];
     double crankAmericanPutPrice = americanPutGrid[S_index][0];
 
-    double bsCallPrice = blackScholesPrice(S, K, T, r, sigma, "Call");
-    double bsPutPrice = blackScholesPrice(S, K, T, r, sigma, "Put");
+    //double bsCallPrice = blackScholesPrice(S, K, T, r, sigma, "call");
+    double bsCallPrice = BlackScholesExplicitSolver::blackScholesPrice(S, callOption);
+    double bsPutPrice = blackScholesPrice(S, K, T, r, sigma, "put");
 
     std::cout << "Black-Scholes Call Price: " << bsCallPrice << std::endl;
     std::cout << "Crank-Nicholson European Call Price: " << crankCallPrice << std::endl;
@@ -77,7 +79,7 @@ int main() {
     std::cout << "Black-Scholes Put Price: " << bsPutPrice << std::endl;
     std::cout << "Crank-Nicolson European Put Price: " << crankPutPrice << std::endl;
     std::cout << "Crank-Nicolson American Put Price: " << crankAmericanPutPrice << std::endl;
-    std::cout << "Put Price Difference (European - American): " << std::abs(bsPutPrice - crankAmericanPutPrice) << std::endl;
+
 
     return 0;
 }
