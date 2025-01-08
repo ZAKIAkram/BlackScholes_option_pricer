@@ -34,7 +34,7 @@ int main() {
     double T = 1.0;         
     double r = 0.05;       
     double sigma = 0.25;
-    int M = 10, N = 10;
+    int M = 100, N = 100;
 
     auto callPayoff = std::make_shared<CallPayoff>(K);
     auto putPayoff = std::make_shared<PutPayoff>(K);
