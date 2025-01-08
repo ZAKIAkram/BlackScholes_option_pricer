@@ -8,6 +8,6 @@ std::string EuropeanOption::getExerciseType() const{
 	return "European";
 }
 
-std::shared_ptr<Option> EuropeanOption::clone() const {
-	return std::make_shared<EuropeanOption>(*this);
-}
+//std::shared_ptr<Option> EuropeanOption::clone() const {
+//	return std::make_shared<EuropeanOption>(*this);
+//}
