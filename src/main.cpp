@@ -33,7 +33,7 @@ int main() {
     double K = 100.0;       
     double T = 1.0;         
     double r = 0.05;       
-    double sigma = 0.2;
+    double sigma = 0.25;
     int M = 100, N = 100;
 
     auto callPayoff = std::make_shared<CallPayoff>(K);

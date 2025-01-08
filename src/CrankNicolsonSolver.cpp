@@ -9,6 +9,7 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 	double dt = T / static_cast<double>(N);
 	double ds = S_max / static_cast<double>(M);
 	std::string optionType = option.getType();
+	std::string exerciseType = option.getExerciseType();
 
 	std::vector<double> a(M - 1, 0.0);
 	std::vector<double> b(M - 1, 0.0);
@@ -28,9 +29,9 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 			double gamma = 0.25 * dt * (sigma * sigma * i * i + r * i);
 
 			a[i - 1] = -alpha;
-			b[i - 1] = 1 - beta;
+			b[i - 1] = 1. - beta;
 			c[i - 1] = -gamma;
-			d[i - 1] = alpha * grid[i - 1][t + 1] + (1 + beta) * grid[i][t + 1] + gamma * grid[i + 1][t + 1];
+			d[i - 1] = alpha * grid[i - 1][t + 1] + (1. + beta) * grid[i][t + 1] + gamma * grid[i + 1][t + 1];
 		}
 
 		// Thomas algorithm
@@ -43,12 +44,16 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
 		grid[M - 1][t] = d[M - 2] / b[M - 2];
 		for (int i = M - 2; i > 0; --i) {
 			double value = (d[i - 1] - c[i - 1] * grid[i + 1][t]) / b[i - 1];
-			grid[i][t] = (value > 1e-16) ? value : 0.;
+			grid[i][t] = (std::abs(value) > 1e-16) ? value : 0.;
+			if (exerciseType == "American") {
+				double spot = i * ds;
+				grid[i][t] = std::max(grid[i][t], option.computePayoff(spot));
+			}
 		}
 
-		if (option.getExerciseType() == "American") {
+		/*if (option.getExerciseType() == "American") {
 			earlyExercise(option, grid, t);
-		}
+		}*/
 	}
 	return grid;
 }
@@ -74,11 +79,11 @@ void CrankNicolsonSolver::setupBoundaryConditions(const Option& option, std::vec
 	double ds = 2. * K / static_cast<double>(M);
 	std::string optionType = option.getType();
 	double S_max = 2. * K;
-	for (int t = N - 1; t >= 0; --t) {
+	for (int t = N; t >= 0; --t) {
 		double r = rates.at(t * dt / T);
 		if (optionType == "call") {
 			grid[0][t] = 0.;
-			grid[M][t] = (S_max - K * exp(-r * (T - t * dt)));
+			grid[M][t] = S_max - K * exp(-r * (T - t * dt));
 		}
 		else {
 			grid[0][t] = K * exp(-r * (T - t * dt));

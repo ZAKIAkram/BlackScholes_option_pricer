@@ -10,6 +10,10 @@ class CrankNicolsonSolver {
 private:
 	static void earlyExercise(const Option&, std::vector<std::vector<double>>&, int);
 	static void setupBoundaryConditions(const Option&, std::vector<std::vector<double>>&);
+	static void earlyExerciseParallel(const Option& option,
+		std::vector<std::vector<double>>& grid,
+		int t,
+		unsigned int num_threads);
 public:
 	static std::vector<std::vector<double>> solve(const Option&, int, int);
 };

@@ -1,6 +1,6 @@
 #include "Greeks.hpp"
 
-Greeks::Greeks(int N, int M) : _M(M), _N(N), _delta(M, 0.), _gamma(M, 0.), _theta(M, std::vector<double>(N)), _rho(M, 0.), _vega(M, 0.) {}
+Greeks::Greeks(int N, int M) : _M(M), _N(N), _delta(M + 1, 0.), _gamma(M + 1, 0.), _theta(M + 1, std::vector<double>(N + 1)), _rho(M + 1, 0.), _vega(M + 1, 0.) {}
 
 Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& grid, int N, int M) : Greeks(N, M){
 
@@ -10,29 +10,29 @@ Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& gri
 	double sigma = option.getSigma();
 	double S_max = 2. * K;
 
-	double dt = T / static_cast<double>(_N - 1);
-	double ds = S_max / static_cast<double>(_M - 1);
+	double dt = T / static_cast<double>(_N);
+	double ds = S_max / static_cast<double>(_M);
 
 
-	for (int i = 1; i < _M - 1; ++i) {
+	for (int i = 1; i < _M; i++) {
 		_delta[i] = (grid[i + 1][0] - grid[i - 1][0]) / (2 * ds);
 		_gamma[i] = (grid[i + 1][0] - 2 * grid[i][0] + grid[i - 1][0]) / (ds * ds);
 	}
 
 	_delta[0] = (grid[1][0] - grid[0][0]) / ds;
-	_delta[_M - 1] = (grid[M - 1][0] - grid[M - 2][0]) / ds;
+	_delta[_M] = (grid[_M][0] - grid[M - 1][0]) / ds;
 	_gamma[0] = 0.0;
-	_gamma[_M - 1] = 0.0;
+	_gamma[_M] = 0.0;
 
 
-	for (int t = 0; t < _N - 1; ++t) {
-		for (int i = 0; i < _M; ++i) {
+	for (int t = 0; t < _N; t++) {
+		for (int i = 0; i < _M + 1; i++) {
 			_theta[i][t] = (grid[i][t] - grid[i][t + 1]) / dt;
 		}
 	}
 
 	double epsilon = 0.01;
-	for (int i = 0; i < _M; ++i) {
+	for (int i = 0; i < _M + 1; i++) {
 		auto option_up_sigma = option.clone();
 		option_up_sigma->setSigma(option.getSigma() + epsilon);
 		std::vector<std::vector<double>> grid_up_sigma = CrankNicolsonSolver::solve(*option_up_sigma, _N, _M);
