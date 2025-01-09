@@ -10,6 +10,3 @@ std::string PutPayoff::getType() const {
 	return "put";
 }
 
-//Payoff* PutPayoff::clone() const {
-//	return new PutPayoff(*this);
-//}
