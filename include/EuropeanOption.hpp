@@ -9,7 +9,6 @@
  /**
   * @class EuropeanOption
   * @brief Class representing a European option.
-  * @inherits Option
   */
 class EuropeanOption : public Option {
 public:

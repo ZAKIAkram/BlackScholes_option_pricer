@@ -8,7 +8,6 @@
 /**
  * @class Payoff
  * @brief Abstract class for option payoffs.
- * @inheritDoc
  */
 class Payoff {
 protected:

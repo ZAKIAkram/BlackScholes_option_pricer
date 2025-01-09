@@ -10,7 +10,6 @@
  /**
   * @class AmericanOption
   * @brief Classwhich represents an American option.
-  * @inherits Option
   */
 class AmericanOption : public Option{
 public:

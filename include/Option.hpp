@@ -14,7 +14,6 @@
 /**
  * @class Option
  * @brief Abstract class options.
- * @inheritDoc
  */
 class Option {
 protected:

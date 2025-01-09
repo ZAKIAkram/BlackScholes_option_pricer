@@ -9,7 +9,6 @@
  /**
   * @class CallPayoff
   * @brief Class representing the payoff of a call option.
-  * @inherits Payoff
   */
 class CallPayoff : public Payoff {
 public:

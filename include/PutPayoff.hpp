@@ -9,7 +9,6 @@
 /**
  * @class PutPayoff
  * @brief Class representing the payoff of a put option.
- * @inherits Payoff
  */
 class PutPayoff : public Payoff {
 public:
