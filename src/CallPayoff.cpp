@@ -9,6 +9,4 @@ double CallPayoff::operator()(double spot) const {
 std::string CallPayoff::getType() const {
 	return "call";
 }
-//Payoff* CallPayoff::clone() const {
-//	return new CallPayoff(*this);
-//}
+

@@ -4,9 +4,6 @@ AmericanOption::AmericanOption(const std::shared_ptr<Payoff>& payoff, double mat
 
 AmericanOption::AmericanOption(const AmericanOption& other) : Option(other._payoff, other._maturity, other._sigma, other._rates.at(0), other._rates.at(1)){}
 
-//std::shared_ptr<Option> AmericanOption::clone() const{
-//	return std::make_shared<AmericanOption>(*this);
-//}
 std::string AmericanOption::getExerciseType() const {
 	return "American";
 }

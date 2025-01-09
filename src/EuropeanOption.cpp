@@ -7,7 +7,3 @@ EuropeanOption::EuropeanOption(const EuropeanOption& other) : Option(other._payo
 std::string EuropeanOption::getExerciseType() const{
 	return "European";
 }
-
-//std::shared_ptr<Option> EuropeanOption::clone() const {
-//	return std::make_shared<EuropeanOption>(*this);
-//}

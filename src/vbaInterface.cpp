@@ -46,8 +46,7 @@ extern "C" {
                 payoff = std::make_shared<PutPayoff>(K);
             }
             else {
-                //outGrid = nullptr;
-                // TODO : throw exception maybe ? 
+                std::cout << "optionType should be either 'put' or 'call'" << std::endl;
                 return;
             }
 
@@ -59,8 +58,7 @@ extern "C" {
                 option = std::make_unique<AmericanOption>(payoff, T, sigma, r_0, r_1);
             }
             else {
-                //outGrid = nullptr;
-                // TODO: Throw exception
+                std::cout << "exerciseType should be either 'American' or 'European'" << std::endl;
                 return;
             }
 
@@ -85,9 +83,8 @@ extern "C" {
 
 
         }
-        catch (...) {
-            //outGrid = nullptr;
-            // TODO
+        catch (const std::exception& e) {
+            std::cerr << "An error occurred: " << e.what() << std::endl;
             return;
         }
     }
