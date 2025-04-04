@@ -43,13 +43,13 @@ protected:
     std::unique_ptr<Greeks> callGreeks;
     std::unique_ptr<Greeks> putGreeks;
 
-    int getIndex(double spot) {
-        return static_cast<int>(spot * M / (2 * K));
+    size_t getIndex(double spot) {
+        return static_cast<size_t>(spot * M / (2 * K));
     }
 };
 
 TEST_F(GreeksTest, DeltaBounds) {
-    int idx = getIndex(S);
+    size_t idx = getIndex(S);
     // Call delta should be between 0 and 1
     EXPECT_GE(callGreeks->getDelta()[idx], 0.0);
     EXPECT_LE(callGreeks->getDelta()[idx], 1.0);
@@ -60,7 +60,7 @@ TEST_F(GreeksTest, DeltaBounds) {
 
 // Test Put-Call Parity for Delta
 TEST_F(GreeksTest, PutCallParityDelta) {
-    int idx = getIndex(S);
+    size_t idx = getIndex(S);
     double callDelta = callGreeks->getDelta()[idx];
     double putDelta = putGreeks->getDelta()[idx];
     EXPECT_NEAR(callDelta - putDelta, 1.0, tolerance);
@@ -68,7 +68,7 @@ TEST_F(GreeksTest, PutCallParityDelta) {
 
 // Test Gamma positivity and equality for puts and calls
 TEST_F(GreeksTest, GammaProperties) {
-    int idx = getIndex(S);
+    size_t idx = getIndex(S);
     double callGamma = callGreeks->getGamma()[idx];
     double putGamma = putGreeks->getGamma()[idx];
     // Gamma should be positive
@@ -79,7 +79,7 @@ TEST_F(GreeksTest, GammaProperties) {
 }
 
 TEST_F(GreeksTest, VegaProperties) {
-    int idx = getIndex(S);
+    size_t idx = getIndex(S);
     double callVega = callGreeks->getVega()[idx];
     double putVega = putGreeks->getVega()[idx];
     // Vega should be positive
@@ -91,19 +91,19 @@ TEST_F(GreeksTest, VegaProperties) {
 
 
 TEST_F(GreeksTest, ThetaProperties) {
-    int idx = getIndex(S);
+    size_t idx = getIndex(S);
     // For at-the-money options with positive interest rate
     if (std::abs(S - K) < 1e-6 && r > 0) {
         // Call theta is negative for ATM options
         EXPECT_LT(callGreeks->getTheta()[idx][0], 0.0);
     }
     // iTM puts have positive theta
-    int deepItmIdx = getIndex(0.5 * K);
+    size_t deepItmIdx = getIndex(0.5 * K);
     EXPECT_GT(putGreeks->getTheta()[deepItmIdx][0], 0.0);
 }
 
 TEST_F(GreeksTest, RhoDirectionalProperties) {
-    int idx = getIndex(S);
+    size_t idx = getIndex(S);
     double callRho = callGreeks->getRho()[idx];
     double putRho = putGreeks->getRho()[idx];
     EXPECT_GT(callRho, 0.0);

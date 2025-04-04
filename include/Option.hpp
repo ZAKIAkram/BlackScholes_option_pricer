@@ -47,7 +47,7 @@ protected:
 	 */
 	Option(const Option& other);
 public:
-	//virtual ~Option();
+	virtual ~Option() = default;
 	double getMaturity() const;
 	virtual std::string getExerciseType() const = 0;
 	Rates getRates() const;

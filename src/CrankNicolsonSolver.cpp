@@ -1,6 +1,6 @@
 #include "CrankNicolsonSolver.hpp"
 
-std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option, int N, int M) {
+std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option, size_t N, size_t M) {
 
     double T = option.getMaturity();
     double K = option.getStrike();
@@ -21,8 +21,8 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
     std::vector<std::vector<double>> grid(M + 1, std::vector<double>(N + 1, 0.));
 
     // boundary conditions
-    for (int i = 0; i <= M; ++i) {
-        double spot = i * ds;
+    for (size_t i = 0; i <= M; ++i) {
+        double spot = static_cast<double>(i) * ds;
         grid[i][N] = option.computePayoff(spot);
     }
 
@@ -30,14 +30,14 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
         double r = rates.at(t * dt / T);
 
         
-        for (int i = 0; i <= M; ++i) {
-            double stockPrice = i * ds;
-            double alpha = 0.25 * dt * (sigma * sigma * i * i - r * i);
+        for (size_t i = 0; i <= M; ++i) {
+            double stockPrice = static_cast<double>(i) * ds;
+            double alpha = 0.25 * dt * i * (sigma * sigma * i - r);
             double beta = -0.5 * dt * (sigma * sigma * i * i + r);
-            double gamma = 0.25 * dt * (sigma * sigma * i * i + r * i);
+            double gamma = 0.25 * dt * i * (sigma * sigma * i + r);
 
             
-            if (i > 0 && i < M) {
+            if (i > 0 and i < M) {
                 a[i] = -alpha;
                 b[i] = 1. - beta;
                 c[i] = -gamma;
@@ -60,7 +60,7 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
             d[M] = 0.0;  
         }
 
-        for (int i = 1; i <= M; ++i) {
+        for (size_t i = 1; i <= M; ++i) {
             double m = a[i] / b[i - 1];
             b[i] -= m * c[i - 1];
             d[i] -= m * d[i - 1];
@@ -73,7 +73,7 @@ std::vector<std::vector<double>> CrankNicolsonSolver::solve(const Option& option
         }
 
         if (exerciseType == "American") {
-            for (int i = 0; i <= M; ++i) {
+            for (size_t i = 0; i <= M; ++i) {
                 double spot = i * ds;
                 grid[i][t] = std::max(grid[i][t], option.computePayoff(spot));
             }

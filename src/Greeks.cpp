@@ -1,8 +1,8 @@
 #include "Greeks.hpp"
 
-Greeks::Greeks(int N, int M) : _M(M), _N(N), _delta(M + 1, 0.), _gamma(M + 1, 0.), _theta(M + 1, std::vector<double>(N + 1)), _rho(M + 1, 0.), _vega(M + 1, 0.) {}
+Greeks::Greeks(size_t N, size_t M) : _N(N), _M(M), _delta(M + 1, 0.), _gamma(M + 1, 0.), _rho(M + 1, 0.), _vega(M + 1, 0.), _theta(M + 1, std::vector<double>(N + 1)) {}
 
-Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& grid, int N, int M) : Greeks(N, M){
+Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& grid, size_t N, size_t M) : Greeks(N, M){
 
 	double T = option.getMaturity();
 	double K = option.getStrike();
@@ -14,7 +14,7 @@ Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& gri
 	double ds = S_max / static_cast<double>(_M);
 
 
-	for (int i = 1; i < _M; i++) {
+	for (size_t i = 1; i < _M; i++) {
 		double S = i * ds;
 		_delta[i] = (grid[i + 1][0] - grid[i - 1][0]) / (2 * ds);
 		_gamma[i] = (grid[i + 1][0] - 2 * grid[i][0] + grid[i - 1][0]) / (ds * ds);
@@ -29,8 +29,8 @@ Greeks::Greeks(const Option& option, const std::vector<std::vector<double>>& gri
 	_gamma[_M] = 0.;
 
 
-	for (int t = 0; t < _N; t++) {
-		for (int i = 0; i < _M + 1; i++) {
+	for (size_t t = 0; t < _N; t++) {
+		for (size_t i = 0; i < _M + 1; i++) {
 			_theta[i][t] = (grid[i][t + 1] - grid[i][t]) / dt;
 		}
 	}

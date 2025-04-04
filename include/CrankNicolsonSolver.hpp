@@ -32,5 +32,5 @@ public:
      * @param M Number of asset price steps.
      * @return 2D vector representing the option price grid.
      */
-	static std::vector<std::vector<double>> solve(const Option& option, int N, int M);
+	static std::vector<std::vector<double>> solve(const Option& option, size_t N, size_t M);
 };

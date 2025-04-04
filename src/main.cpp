@@ -18,7 +18,7 @@ int main() {
     double T = 1.0;         
     double r = 0.05;       
     double sigma = 0.25;
-    int M = 100, N = 100;
+    size_t M = 100, N = 100;
 
     auto callPayoff = std::make_shared<CallPayoff>(K);
     auto putPayoff = std::make_shared<PutPayoff>(K);
@@ -39,11 +39,11 @@ int main() {
     Greeks americanCallGreeks(americanCallOption, americanCallGrid, N, M);
     Greeks americanPutGreeks(americanPutOption, americanPutGrid, N, M);
 
-    int mid = M / 2;
-    double S_max = 2.0 * K; 
-    double ds = S_max / (M);
+    //size_t mid = M / 2;
+    //double S_max = 2.0 * K; 
+    //double ds = S_max / static_cast<double>(M);
 
-    int S_index = static_cast<int>(S * M / (2 * K));
+    size_t S_index = static_cast<size_t>(S * static_cast<double>(M) / (2 * K));
 
     double crankCallPrice = europeanCallGrid[S_index][0];
     double crankPutPrice = europeanPutGrid[S_index][0];
