@@ -6,6 +6,7 @@ double PutPayoff::operator()(double spot) const {
 	return std::max(_strike - spot, 0.);
 }
 
-Payoff* PutPayoff::clone() const {
-	return new PutPayoff(*this);
+std::string PutPayoff::getType() const {
+	return "put";
 }
+

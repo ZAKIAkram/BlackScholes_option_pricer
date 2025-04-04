@@ -1,14 +1,19 @@
-enable_testing() 
+
+enable_testing()
 
 add_executable(
-  BS_pricer_test
-  BS_pricer_test.cpp
-)
+  non_regression_tests
+  CallPayoff_test.cpp
+  PutPayoff_test.cpp
+  Rate_test.cpp
+  vbaInterface_test.cpp
+  CrankNicolsonSolver_test.cpp "BlackScholesExplicitSolver_test.cpp" "Greeks_test.cpp" "EuropeanOption_test.cpp" "AmericanOption_test.cpp")
 
 target_link_libraries(
-  BS_pricer_test
-  GTest::gtest_main 
+  non_regression_tests
+  BS_pricer         
+  GTest::gtest_main  
 )
 
 include(GoogleTest)
-gtest_discover_tests(BS_pricer_test) 
+gtest_discover_tests(non_regression_tests)
